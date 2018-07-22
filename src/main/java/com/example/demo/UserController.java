@@ -41,17 +41,10 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="userBody", method=RequestMethod.POST,headers = "Accept=application/json")
-	public List<User> userBody(@RequestBody Map data)
+	public String userBody(@RequestBody Map data)
 	{
-		data.get("id");
-		List<User> list = new ArrayList<>();
-		User user1 = new User();
-		user1.setId("userbody id ");
-		user1.setName("user body name");
-		user1.setMobile("8888888 mobile");
-			
-		list.add(user1);
-		return list;	
+		
+		return (String) data.get("id");	
 	}
 
 }
