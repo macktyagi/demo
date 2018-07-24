@@ -1,26 +1,27 @@
 package com.example.main;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.example.dao.CustomerDao;
-import com.example.dao.CustomerDaoImpl;
 import com.example.model.Customer;
+import com.example.repository.CustomerRepository;
 import com.example.service.CustomerService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 public class CustomerController {
 	
-	@RequestMapping(value="customer/{id}", method=RequestMethod.GET,headers = "Accept=application/json")
+	@GetMapping(value="customer")
 	public List<Customer> customerData(@PathVariable String id)
 	{
 		
@@ -50,7 +51,7 @@ public class CustomerController {
 		return list;	
 	}
 	
-	@RequestMapping(value="customerBody", method=RequestMethod.POST,headers = "Accept=application/json")
+	@PostMapping(value="customerBody")
 	public String customerBody(@RequestBody String data)
 	{		
 		
@@ -59,21 +60,79 @@ public class CustomerController {
 	
 	
 	//-----------------------------------database connectivity-----------------------------------------//
+	
 	@Autowired
 	private CustomerService customerService;
 	
-	@RequestMapping(value="addCustomer", method=RequestMethod.POST,headers = "Accept=application/json")
-	public void addCustomer(@RequestBody Customer customer, UriComponentsBuilder builder)
-	{				
-		customerService.addCustomer(customer);
+	@PostMapping(value="addCustomer")
+	public void addCustomer(@RequestBody String request)
+	{		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Customer customer = mapper.readValue(request, Customer.class);
+			customerService.addCustomer(customer);
+		} catch (JsonParseException | JsonMappingException e) {
+			 
+			e.printStackTrace();
+		} catch (IOException e) {
+		 
+			e.printStackTrace();
+		} 
+		
 	}
 	
-	@RequestMapping(value="getAllCustomer", method=RequestMethod.GET,headers = "Accept=application/json")
+	@PostMapping(value="addMultipleCustomer")
+	public void addMultipleCustomer(@RequestBody String request)
+	{		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Customer[] customer = mapper.readValue(request, Customer[].class);
+			for(Customer c: customer)
+			{	
+				customerService.addCustomer(c);
+			}
+		} catch (JsonParseException | JsonMappingException e) {
+			 
+			e.printStackTrace();
+		} catch (IOException e) {
+		 
+			e.printStackTrace();
+		} 
+		
+	}
+	
+	@GetMapping(value="getAllCustomer")
 	public List<Customer> getAllCustomer()
 	{				
 		return customerService.getAllCustomer();
 	}
 	
+	
+	//-------------------JPA CRUD------------------------------------------------//
+	@Autowired 
+	private CustomerRepository cr;
+	@GetMapping(value="getAlldata")
+	public List<Customer> getAlldata()
+	{				
+		return cr.findAll();
+	}
+	
+	@PostMapping(value="add")
+	public void add(@RequestBody String request)
+	{		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Customer customer = mapper.readValue(request, Customer.class);
+			cr.save(customer);
+		} catch (JsonParseException | JsonMappingException e) {
+			 
+			e.printStackTrace();
+		} catch (IOException e) {
+		 
+			e.printStackTrace();
+		} 
+		
+	}
 	
 
 }

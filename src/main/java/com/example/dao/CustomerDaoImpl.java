@@ -18,14 +18,15 @@ public class CustomerDaoImpl implements CustomerDao {
 	private EntityManager entityManager;
 	
 	@Override
-	public void addCustomer(Customer customer) {		
+	public void addCustomer(Customer customer) 
+	{		
 		entityManager.persist(customer);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Customer> getAllCustomer() {
-		String hql = "FROM Customer as cust order by 1 asc";
+		String hql = "FROM Customer ";
 		return (List<Customer>) entityManager.createQuery(hql).getResultList();
 	}
 	

@@ -16,7 +16,7 @@ public class Customer implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)	
+	//@GeneratedValue(strategy=GenerationType.AUTO)	
 	@Column(name="cust_id")
 	private String id;
 	
@@ -54,5 +54,11 @@ public class Customer implements Serializable {
 	public void setCity(String city) {
 		this.city = city;
 	}
+	
+	@Override
+    public String toString()
+    {
+        return "[id = "+id+", name = "+name+", mobile = "+mobile+", city = "+city+"]";
+    }
 
 }
