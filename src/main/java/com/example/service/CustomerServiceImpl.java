@@ -25,5 +25,16 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerDao.getAllCustomer();
 	}
 	
+	@Override
+	public void addHib(Customer customer) {
+		customerDao.addHib(customer);		
+	}
+	
+	@Override
+	public List<Customer> getAllHib() {
+		
+		return customerDao.getAllHib();
+	}
+	
 
 }

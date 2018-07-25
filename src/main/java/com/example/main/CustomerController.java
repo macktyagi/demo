@@ -38,14 +38,6 @@ public class CustomerController {
 		customer2.setMobile("9999999999");
 		customer2.setCity("NOIDA");
 		
-		/*if(id.equalsIgnoreCase("1000000001"))
-		{
-			list.add(customer1);
-		}
-		else
-		{
-			list.add(customer2);
-		}	*/	
 		list.add(customer1);
 		list.add(customer2);
 		return list;	
@@ -132,6 +124,30 @@ public class CustomerController {
 			e.printStackTrace();
 		} 
 		
+	}
+	
+	@PostMapping(value="addHib")
+	public void addHib(@RequestBody String request)
+	{		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Customer customer = mapper.readValue(request, Customer.class);
+			customerService.addHib(customer);
+		} catch (JsonParseException | JsonMappingException e) {
+			 
+			e.printStackTrace();
+		} catch (IOException e) {
+		 
+			e.printStackTrace();
+		} 
+		
+	}
+	
+	
+	@GetMapping(value="getAllHib")
+	public List<Customer> getAllHib()
+	{				
+		return customerService.getAllHib();
 	}
 	
 
