@@ -46,9 +46,11 @@ public class CustomerDaoImpl implements CustomerDao {
 	@Override
 	public List<Customer> getAllHib() {
 		
-		Session session = entityManager.unwrap(Session.class);
+		Session session = entityManager.unwrap(Session.class);//get session directly..
+		SessionFactory sf = entityManager.getEntityManagerFactory().unwrap(SessionFactory.class);
 		String hql = "FROM Customer";
-		return session.createQuery(hql).getResultList();
+		Session s = sf.openSession();//create new session from session factory
+		return s.createQuery(hql).getResultList();
 	}
 	
 
